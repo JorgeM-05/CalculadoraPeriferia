@@ -9,4 +9,6 @@ public interface IParametersService {
 
     public ApiResponseDto createParameters(RequestParametersDto requestParametersDto);
 
+    public ApiResponseDto updateParameters(int dni, RequestParametersDto requestParametersDto);
+
 }

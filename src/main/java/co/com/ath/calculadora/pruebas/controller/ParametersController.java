@@ -42,7 +42,7 @@ public class ParametersController {
                                                       @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         ApiResponseDto response;
         try {
-            log.info("Service controller Init. <{}>", value);
+            log.info("Service create controller Init. <{}>", value);
             response = parametersService.getParametersByLayer(value, pageNo, pageSize);
         } catch (Exception e) {
             log.error("Ha ocurrido un error : {} ", e.getMessage());
@@ -57,6 +57,19 @@ public class ParametersController {
         try {
             log.info("Service controller Init. <{}>", request);
             response = parametersService.createParameters(request);
+        } catch (Exception e) {
+            log.error("Ha ocurrido un error : {} ", e.getMessage());
+            response = ResponseError.error("error ");
+        }
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    @PutMapping("/{dni}")
+    public ResponseEntity<ApiResponseDto> updateParameters(@PathVariable("dni") int dni,@RequestBody RequestParametersDto request) {
+        ApiResponseDto response;
+        try {
+            log.info("Service Update controller Init. <{}>", request);
+            response = parametersService.updateParameters(dni,request);
         } catch (Exception e) {
             log.error("Ha ocurrido un error : {} ", e.getMessage());
             response = ResponseError.error("error ");

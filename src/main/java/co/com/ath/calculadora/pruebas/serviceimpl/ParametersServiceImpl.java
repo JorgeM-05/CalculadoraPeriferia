@@ -38,16 +38,16 @@ public class ParametersServiceImpl implements IParametersService {
     @Override
     public ApiResponseDto getParametersByValue(String valor, Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
-        log.info("buscando en Base datos valor <{}>",valor);
+        log.info("buscando en Base datos valor <{}>", valor);
         Page<ParametersEntity> parametersEntity;
-        if(valor == null)
+        if (valor == null)
             parametersEntity = parametersRepository.findAll(paging);
         else
-            parametersEntity = parametersRepository.findByValor(valor,paging);
+            parametersEntity = parametersRepository.findByValor(valor, paging);
 
-        if (parametersEntity!=null) {
+        if (parametersEntity != null) {
             List<ParametersDto> parametersDto = mapParametersDto(parametersEntity);
-            PaginationDto paginationDto = mapPaginationDto(parametersEntity,pageNo,pageSize);
+            PaginationDto paginationDto = mapPaginationDto(parametersEntity, pageNo, pageSize);
             return ApiResponseDto.builder().data(parametersDto).pagination(paginationDto).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
@@ -57,16 +57,16 @@ public class ParametersServiceImpl implements IParametersService {
     @Override
     public ApiResponseDto getParametersByLayer(String capa, Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
-        log.info("buscando en Base datos valor <{}>",capa);
+        log.info("buscando en Base datos valor <{}>", capa);
         Page<ParametersEntity> parametersEntity;
-        if(capa == null)
+        if (capa == null)
             parametersEntity = parametersRepository.findAll(paging);
         else
-            parametersEntity = parametersRepository.findByCapa(capa,paging);
+            parametersEntity = parametersRepository.findByCapa(capa, paging);
 
-        if (parametersEntity!=null) {
+        if (parametersEntity != null) {
             List<ParametersDto> parametersDto = mapParametersDto(parametersEntity);
-            PaginationDto paginationDto = mapPaginationDto(parametersEntity,pageNo,pageSize);
+            PaginationDto paginationDto = mapPaginationDto(parametersEntity, pageNo, pageSize);
             return ApiResponseDto.builder().data(parametersDto).pagination(paginationDto).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
@@ -77,18 +77,37 @@ public class ParametersServiceImpl implements IParametersService {
     public ApiResponseDto createParameters(RequestParametersDto requestParametersDto) {
 
         ParametersEntity parametersEntity = new ParametersEntity();
-        if(!requestParametersDto.getCapa().isEmpty() && !requestParametersDto.getValor().isEmpty() && !requestParametersDto.getEstado().isEmpty() && !requestParametersDto.getCapa().isEmpty())
+        if (!requestParametersDto.getCapa().isEmpty() && !requestParametersDto.getValor().isEmpty() && !requestParametersDto.getEstado().isEmpty() && !requestParametersDto.getCapa().isEmpty())
             parametersEntity = parametersRepository.save(mapParametersEntity(requestParametersDto));
 
-        if (parametersEntity.getDni()>0) {
+        if (parametersEntity.getDni() > 0) {
             return ApiResponseDto.builder().data(parametersEntity).message(Constants.SUCESSFULL).status(HttpStatus.CREATED).build();
         }
         return ApiResponseDto.builder().data(null).message("Error insertando en Base Datos").status(HttpStatus.CONFLICT).build();
     }
-    private ParametersEntity mapParametersEntity(RequestParametersDto requestParametersDto){
+
+    @Override
+    public ApiResponseDto updateParameters(int dni, RequestParametersDto requestParametersDto) {
+        ParametersEntity parametersEntity = parametersRepository.findByDni(dni);
+        log.info("param update <{}>", parametersEntity);
+        if (parametersEntity != null) {
+            parametersEntity.setCapa(requestParametersDto.getCapa());
+            parametersEntity.setEstado(requestParametersDto.getEstado());
+            parametersEntity.setValor(requestParametersDto.getValor());
+            parametersEntity= parametersRepository.save(parametersEntity);
+            log.info("param update <{}>",parametersEntity);
+
+            if (parametersEntity.getDni() > 0) {
+                return ApiResponseDto.builder().data(parametersEntity).message(Constants.SUCESSFULL).status(HttpStatus.CREATED).build();
+            }
+        }
+        return ApiResponseDto.builder().data(null).message("Error actualizando en Base Datos").status(HttpStatus.CONFLICT).build();
+    }
+
+    private ParametersEntity mapParametersEntity(RequestParametersDto requestParametersDto) {
         ParametersEntity parametersEntity = new ParametersEntity();
 
-        if(requestParametersDto != null){
+        if (requestParametersDto != null) {
             parametersEntity.setCapa(requestParametersDto.getCapa());
             parametersEntity.setEstado(requestParametersDto.getEstado());
             parametersEntity.setValor(requestParametersDto.getValor());
@@ -97,10 +116,10 @@ public class ParametersServiceImpl implements IParametersService {
     }
 
 
-    private List<ParametersDto> mapParametersDto(Page<ParametersEntity> parametersEntity){
+    private List<ParametersDto> mapParametersDto(Page<ParametersEntity> parametersEntity) {
         List<ParametersDto> listParametersDto = new ArrayList<>();
-        if(!parametersEntity.isEmpty()){
-            for(ParametersEntity parameters:parametersEntity.getContent()){
+        if (!parametersEntity.isEmpty()) {
+            for (ParametersEntity parameters : parametersEntity.getContent()) {
                 ParametersDto parametersDto = new ParametersDto();
                 parametersDto.setDni(parameters.getDni());
                 parametersDto.setCapa(parameters.getCapa());
@@ -112,7 +131,7 @@ public class ParametersServiceImpl implements IParametersService {
         return listParametersDto;
     }
 
-    private PaginationDto  mapPaginationDto(Page<ParametersEntity> parametersEntity,Integer pageNo,Integer pageSize) {
+    private PaginationDto mapPaginationDto(Page<ParametersEntity> parametersEntity, Integer pageNo, Integer pageSize) {
         PaginationDto paginationDto = new PaginationDto();
         paginationDto.setTotalElements((int) parametersEntity.getTotalElements());
         paginationDto.setTotalPages(parametersEntity.getTotalPages());

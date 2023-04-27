@@ -15,5 +15,5 @@ public interface ParametersRepository extends PagingAndSortingRepository<Paramet
 
     Page<ParametersEntity> findByCapa(String capa, Pageable pageable);
     Page<ParametersEntity> findByValor(String valor, Pageable pageable);
-
+    ParametersEntity findByDni(int dni);
 }
