@@ -8,6 +8,7 @@ public class Constants {
 	public static final String LOG_OUT = "Sale de: {}";
 	
 	public static final String GENERIC_PASSWORD = "123";
+	public static final String SUCESSFULL = "Successfull";
 	
 	
 }

@@ -3,9 +3,11 @@ package co.com.ath.calculadora.pruebas.serviceimpl;
 import co.com.ath.calculadora.pruebas.dto.ApiResponseDto;
 import co.com.ath.calculadora.pruebas.dto.PaginationDto;
 import co.com.ath.calculadora.pruebas.dto.ParametersDto;
+import co.com.ath.calculadora.pruebas.dto.RequestParametersDto;
 import co.com.ath.calculadora.pruebas.entity.ParametersEntity;
 import co.com.ath.calculadora.pruebas.repository.ParametersRepository;
 import co.com.ath.calculadora.pruebas.service.IParametersService;
+import co.com.ath.calculadora.pruebas.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +36,7 @@ public class ParametersServiceImpl implements IParametersService {
      * @return ApiResponseDto
      */
     @Override
-    public ApiResponseDto getParameters(String valor, Integer pageNo, Integer pageSize) {
+    public ApiResponseDto getParametersByValue(String valor, Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         log.info("buscando en Base datos valor <{}>",valor);
         Page<ParametersEntity> parametersEntity;
@@ -46,11 +48,55 @@ public class ParametersServiceImpl implements IParametersService {
         if (parametersEntity!=null) {
             List<ParametersDto> parametersDto = mapParametersDto(parametersEntity);
             PaginationDto paginationDto = mapPaginationDto(parametersEntity,pageNo,pageSize);
-            return ApiResponseDto.builder().data(parametersDto).pagination(paginationDto).message("successful").status(HttpStatus.OK).build();
+            return ApiResponseDto.builder().data(parametersDto).pagination(paginationDto).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
                 .build();
     }
+
+    @Override
+    public ApiResponseDto getParametersByLayer(String capa, Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        log.info("buscando en Base datos valor <{}>",capa);
+        Page<ParametersEntity> parametersEntity;
+        if(capa == null)
+            parametersEntity = parametersRepository.findAll(paging);
+        else
+            parametersEntity = parametersRepository.findByCapa(capa,paging);
+
+        if (parametersEntity!=null) {
+            List<ParametersDto> parametersDto = mapParametersDto(parametersEntity);
+            PaginationDto paginationDto = mapPaginationDto(parametersEntity,pageNo,pageSize);
+            return ApiResponseDto.builder().data(parametersDto).pagination(paginationDto).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
+        }
+        return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
+                .build();
+    }
+
+    @Override
+    public ApiResponseDto createParameters(RequestParametersDto requestParametersDto) {
+
+        ParametersEntity parametersEntity = new ParametersEntity();
+        if(!requestParametersDto.getCapa().isEmpty() && !requestParametersDto.getValor().isEmpty() && !requestParametersDto.getEstado().isEmpty() && !requestParametersDto.getCapa().isEmpty())
+            parametersEntity = parametersRepository.save(mapParametersEntity(requestParametersDto));
+
+        if (parametersEntity.getDni()>0) {
+            return ApiResponseDto.builder().data(parametersEntity).message(Constants.SUCESSFULL).status(HttpStatus.CREATED).build();
+        }
+        return ApiResponseDto.builder().data(null).message("Error insertando en Base Datos").status(HttpStatus.CONFLICT).build();
+    }
+    private ParametersEntity mapParametersEntity(RequestParametersDto requestParametersDto){
+        ParametersEntity parametersEntity = new ParametersEntity();
+
+        if(requestParametersDto != null){
+            parametersEntity.setCapa(requestParametersDto.getCapa());
+            parametersEntity.setEstado(requestParametersDto.getEstado());
+            parametersEntity.setValor(requestParametersDto.getValor());
+        }
+        return parametersEntity;
+    }
+
+
     private List<ParametersDto> mapParametersDto(Page<ParametersEntity> parametersEntity){
         List<ParametersDto> listParametersDto = new ArrayList<>();
         if(!parametersEntity.isEmpty()){

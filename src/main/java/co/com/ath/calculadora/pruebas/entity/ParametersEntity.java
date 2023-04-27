@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class ParametersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer dni;
+    private int dni;
 
     @Column(name = "capa")
     private String capa;

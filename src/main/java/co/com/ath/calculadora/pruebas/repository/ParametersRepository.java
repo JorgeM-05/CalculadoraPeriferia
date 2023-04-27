@@ -12,12 +12,8 @@ import java.util.List;
 
 @Repository
 public interface ParametersRepository extends PagingAndSortingRepository<ParametersEntity, Integer>{
-    @Query(value = "select u from ParametersEntity u where u.capa = :name ")
-    List<ParametersEntity> findByCapa(@Param("name") String valor);
 
-
-    List<ParametersEntity> findByDni(Integer id);
-
+    Page<ParametersEntity> findByCapa(String capa, Pageable pageable);
     Page<ParametersEntity> findByValor(String valor, Pageable pageable);
 
 }
