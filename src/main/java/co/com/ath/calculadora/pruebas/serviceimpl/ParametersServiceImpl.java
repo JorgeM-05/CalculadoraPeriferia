@@ -40,7 +40,7 @@ public class ParametersServiceImpl implements IParametersService {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         log.info("buscando en Base datos valor <{}>", valor);
         Page<ParametersEntity> parametersEntity;
-        if (valor == null)
+        if (valor.isEmpty())
             parametersEntity = parametersRepository.findAll(paging);
         else
             parametersEntity = parametersRepository.findByValor(valor, paging);
@@ -59,7 +59,7 @@ public class ParametersServiceImpl implements IParametersService {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         log.info("buscando en Base datos valor <{}>", capa);
         Page<ParametersEntity> parametersEntity;
-        if (capa == null)
+        if (capa.isEmpty())
             parametersEntity = parametersRepository.findAll(paging);
         else
             parametersEntity = parametersRepository.findByCapa(capa, paging);
