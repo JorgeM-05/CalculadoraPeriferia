@@ -12,6 +12,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -31,16 +32,17 @@ public class DataSourceConfiguration {
     @Bean(name = "readDataSource")
     DataSource readDatasource() {
         log.info(Constants.LOG_IN, Thread.currentThread().getStackTrace()[1].getMethodName());
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();        
 
         /*dataSource.setUrl("jdbc:sqlserver://" + env.getProperty("db.host") + ":" + env.getProperty("db.port")
                 + ";encrypt=true;databaseName=" + env.getProperty("db.nameDb"));*/
+
         dataSource.setUrl("jdbc:mysql://" + env.getProperty("db.host") + ":" + env.getProperty("db.port")
         + "/" + env.getProperty("db.nameDb"));
         dataSource.setUsername(env.getProperty("db.user"));
         dataSource.setPassword(env.getProperty("db.password"));
         dataSource.setDriverClassName(env.getProperty("db.driver"));
-        log.info("Conectando " + dataSource.getUrl());
+		   log.info("Conectando " + dataSource.getUrl());
         log.info(Constants.LOG_OUT, Thread.currentThread().getStackTrace()[1].getMethodName());
         return dataSource;
     }

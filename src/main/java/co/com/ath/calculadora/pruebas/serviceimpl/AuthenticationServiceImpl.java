@@ -24,7 +24,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 	/**
 	 * Metodo que valida la autenticacion
 	 * 
-	 * @param dto -> objeto con lso datos del usuario, clave y nombre
+	 * @param dto -> objeto con los datos del usuario, clave y nombre
 	 * @return ApiResponseDto
 	 */
 

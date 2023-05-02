@@ -1,14 +1,11 @@
 package co.com.ath.calculadora.pruebas.entity;
 
+
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "contextualizacion")
@@ -28,4 +25,5 @@ public class ContextualizacionEntity {
 
     @Column(name = "gestor")
     private String gestor;
+
 }

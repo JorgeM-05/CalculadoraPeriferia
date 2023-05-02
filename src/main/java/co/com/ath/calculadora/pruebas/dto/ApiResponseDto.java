@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 public class ApiResponseDto {
 
     private Object data;
-    private PaginationDto pagination;
     private String message;
     private HttpStatus status;
+	private Integer totalPag;	
+	private Integer actualPag;
     
 }

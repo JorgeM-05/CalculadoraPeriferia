@@ -2,14 +2,15 @@ package co.com.ath.calculadora.pruebas.entity;
 
 
 import lombok.Data;
-import lombok.Setter;
 
 import javax.persistence.*;
+
 
 @Entity
 @Table(name = "parametros")
 @Data
 public class ParametersEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int dni;

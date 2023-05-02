@@ -12,7 +12,7 @@ public class ResponseError {
 		return ApiResponseDto.builder()
 				.data(null)
 				.message(message)
-				.status(HttpStatus.UNAUTHORIZED).build();
+				.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 }
