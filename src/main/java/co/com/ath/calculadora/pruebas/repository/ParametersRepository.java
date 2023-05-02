@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ParametersRepository extends PagingAndSortingRepository<ParametersEntity, Integer>{
 
-    Page<ParametersEntity> findByCapa(String capa, Pageable pageable);
+    List<ParametersEntity> findByCapa(String capa);
 
     Page<ParametersEntity> findByValor(String valor, Pageable pageable);
 

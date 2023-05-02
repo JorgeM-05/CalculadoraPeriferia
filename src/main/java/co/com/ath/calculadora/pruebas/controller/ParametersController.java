@@ -50,7 +50,7 @@ public class ParametersController {
         ApiResponseDto response;
         try {
             log.info("Service create controller Init. <{}>", value);
-            response = parametersService.getParametersByLayer(value, pageNo, pageSize);
+            response = parametersService.getParametersByLayer(value);
         } catch (Exception e) {
             log.error("Ha ocurrido un error : {} ", e.getMessage());
             response = ResponseError.error("error ");

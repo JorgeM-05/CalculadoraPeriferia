@@ -7,7 +7,7 @@ import co.com.ath.calculadora.pruebas.dto.RequestParametersDto;
 public interface IParametersConsultarService {
 
     public ApiResponseDto getParametersByValue(String valor, Integer pageNo, Integer pageSize);
-    public ApiResponseDto getParametersByLayer(String capa, Integer pageNo, Integer pageSize);
+    public ApiResponseDto getParametersByLayer(String capa);
     public ApiResponseDto getId(int id);
 
 }

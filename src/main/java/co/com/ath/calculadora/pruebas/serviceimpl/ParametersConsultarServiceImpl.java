@@ -47,11 +47,11 @@ public class ParametersConsultarServiceImpl implements IParametersConsultarServi
         else
             parametersEntity = parametersRepository.findByValor(valor, paging);
 
-        if (parametersEntity != null) {
+        if (parametersEntity.getContent().size()>0) {
             PaginationDto paginationDto = ParametroUtil.mapPaginationDto(parametersEntity, pageNo, pageSize);
-            return ApiResponseDto.builder().data(ParametroUtil.mapListParametersDto(parametersEntity))
+            return ApiResponseDto.builder().data(ParametroUtil.mapPageParametersDto(parametersEntity))
                                             .totalPag(parametersEntity.getTotalPages())
-                                            .actualPag(pageNo-1)
+                                            .actualPag(pageNo)
                                             .message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
@@ -59,16 +59,15 @@ public class ParametersConsultarServiceImpl implements IParametersConsultarServi
     }
 
     @Override
-    public ApiResponseDto getParametersByLayer(String capa, Integer pageNo, Integer pageSize) {
-        Pageable paging = PageRequest.of(pageNo-1, pageSize);
+    public ApiResponseDto getParametersByLayer(String capa) {
         log.info("buscando en Base datos valor <{}>", capa);
-        Page<ParametersEntity> parametersEntity;
+        List<ParametersEntity> parametersEntity;
         if (capa.isEmpty())
-            parametersEntity = parametersRepository.findAll(paging);
+            parametersEntity = (List<ParametersEntity>) parametersRepository.findAll();
         else
-            parametersEntity = parametersRepository.findByCapa(capa, paging);
+            parametersEntity = parametersRepository.findByCapa(capa);
 
-        if (parametersEntity != null) {
+        if (parametersEntity.size()>0) {
             return ApiResponseDto.builder().data(ParametroUtil.mapListParametersDto(parametersEntity))
                     .message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }

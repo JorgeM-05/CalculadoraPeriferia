@@ -42,7 +42,7 @@ public class ParametroUtil {
         }
         return parametersDto;
     }
-    public static List<ParametersDto> mapListParametersDto(Page<ParametersEntity> parametersEntity) {
+    public static List<ParametersDto> mapPageParametersDto(Page<ParametersEntity> parametersEntity) {
         List<ParametersDto> listParametersDto = new ArrayList<>();
         if (!parametersEntity.isEmpty()) {
             for (ParametersEntity parameters : parametersEntity.getContent()) {
@@ -57,6 +57,20 @@ public class ParametroUtil {
         return listParametersDto;
     }
 
+    public static List<ParametersDto> mapListParametersDto(List<ParametersEntity> parametersEntity) {
+        List<ParametersDto> listParametersDto = new ArrayList<>();
+        if (!parametersEntity.isEmpty()) {
+            for (ParametersEntity parameters : parametersEntity) {
+                ParametersDto parametersDto = new ParametersDto();
+                parametersDto.setDni(parameters.getDni());
+                parametersDto.setCapa(parameters.getCapa());
+                parametersDto.setEstado(parameters.getEstado());
+                parametersDto.setValor(parameters.getValor());
+                listParametersDto.add(parametersDto);
+            }
+        }
+        return listParametersDto;
+    }
     public static PaginationDto mapPaginationDto(Page<ParametersEntity> parametersEntity, Integer pageNo, Integer pageSize) {
         PaginationDto paginationDto = new PaginationDto();
         paginationDto.setTotalElements((int) parametersEntity.getTotalElements());
