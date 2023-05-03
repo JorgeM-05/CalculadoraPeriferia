@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,8 +47,7 @@ public class ParametersConsultarServiceImpl implements IParametersConsultarServi
             parametersEntity = parametersRepository.findByValor(valor, paging);
 
         if (parametersEntity.getContent().size()>0) {
-            PaginationDto paginationDto = ParametroUtil.mapPaginationDto(parametersEntity, pageNo, pageSize);
-            return ApiResponseDto.builder().data(ParametroUtil.mapPageParametersDto(parametersEntity))
+            return ApiResponseDto.builder().data(ParametroUtil.mapParametersDto(parametersEntity.getContent()))
                                             .totalPag(parametersEntity.getTotalPages())
                                             .actualPag(pageNo)
                                             .message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
@@ -68,7 +66,7 @@ public class ParametersConsultarServiceImpl implements IParametersConsultarServi
             parametersEntity = parametersRepository.findByCapa(capa);
 
         if (parametersEntity.size()>0) {
-            return ApiResponseDto.builder().data(ParametroUtil.mapListParametersDto(parametersEntity))
+            return ApiResponseDto.builder().data(ParametroUtil.mapParametersDto(parametersEntity))
                     .message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
@@ -81,8 +79,7 @@ public class ParametersConsultarServiceImpl implements IParametersConsultarServi
         ParametersEntity parametersEntity = parametersRepository.findByDni(id);
 
         if (parametersEntity != null) {
-            ParametersDto parametersDto = ParametroUtil.mapParametersDto(parametersEntity);
-            return ApiResponseDto.builder().data(parametersDto).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
+            return ApiResponseDto.builder().data(ParametroUtil.mapParametersDto(parametersEntity)).message(Constants.SUCESSFULL).status(HttpStatus.OK).build();
         }
         return ApiResponseDto.builder().data(null).message("no existe data").status(HttpStatus.BAD_REQUEST)
                 .build();

@@ -4,6 +4,7 @@ package co.com.ath.calculadora.pruebas.util;
 
 import co.com.ath.calculadora.pruebas.dto.PaginationDto;
 import co.com.ath.calculadora.pruebas.dto.ParametersDto;
+import co.com.ath.calculadora.pruebas.dto.RequestParametersDto;
 import co.com.ath.calculadora.pruebas.entity.ParametersEntity;
 import org.springframework.data.domain.Page;
 
@@ -42,22 +43,8 @@ public class ParametroUtil {
         }
         return parametersDto;
     }
-    public static List<ParametersDto> mapPageParametersDto(Page<ParametersEntity> parametersEntity) {
-        List<ParametersDto> listParametersDto = new ArrayList<>();
-        if (!parametersEntity.isEmpty()) {
-            for (ParametersEntity parameters : parametersEntity.getContent()) {
-                ParametersDto parametersDto = new ParametersDto();
-                parametersDto.setDni(parameters.getDni());
-                parametersDto.setCapa(parameters.getCapa());
-                parametersDto.setEstado(parameters.getEstado());
-                parametersDto.setValor(parameters.getValor());
-                listParametersDto.add(parametersDto);
-            }
-        }
-        return listParametersDto;
-    }
 
-    public static List<ParametersDto> mapListParametersDto(List<ParametersEntity> parametersEntity) {
+    public static List<ParametersDto> mapParametersDto(List<ParametersEntity> parametersEntity) {
         List<ParametersDto> listParametersDto = new ArrayList<>();
         if (!parametersEntity.isEmpty()) {
             for (ParametersEntity parameters : parametersEntity) {
@@ -71,14 +58,16 @@ public class ParametroUtil {
         }
         return listParametersDto;
     }
-    public static PaginationDto mapPaginationDto(Page<ParametersEntity> parametersEntity, Integer pageNo, Integer pageSize) {
-        PaginationDto paginationDto = new PaginationDto();
-        paginationDto.setTotalElements((int) parametersEntity.getTotalElements());
-        paginationDto.setTotalPages(parametersEntity.getTotalPages());
-        paginationDto.setPage(pageNo);
-        paginationDto.setPageSize(pageSize);
-        return paginationDto;
-    }
 
+    public static ParametersEntity mapParametersEntity(RequestParametersDto requestParametersDto) {
+        ParametersEntity parametersEntity = new ParametersEntity();
+
+        if (requestParametersDto != null) {
+            parametersEntity.setCapa(requestParametersDto.getCapa());
+            parametersEntity.setEstado(requestParametersDto.getEstado());
+            parametersEntity.setValor(requestParametersDto.getValor());
+        }
+        return parametersEntity;
+    }
 
 }

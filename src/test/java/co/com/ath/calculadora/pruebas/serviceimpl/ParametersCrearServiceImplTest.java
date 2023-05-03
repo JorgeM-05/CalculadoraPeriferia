@@ -1,9 +1,7 @@
 package co.com.ath.calculadora.pruebas.serviceimpl;
 
 import co.com.ath.calculadora.pruebas.dto.ApiResponseDto;
-import co.com.ath.calculadora.pruebas.dto.ParametersDto;
 import co.com.ath.calculadora.pruebas.dto.RequestParametersDto;
-import co.com.ath.calculadora.pruebas.entity.FabricaEntity;
 import co.com.ath.calculadora.pruebas.entity.ParametersEntity;
 import co.com.ath.calculadora.pruebas.repository.ParametersRepository;
 import co.com.ath.calculadora.pruebas.util.Constants;
@@ -16,53 +14,42 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-
-class ParametersActualizarServiceImplTest {
+class ParametersCrearServiceImplTest {
+    private ParametersEntity parametersEntity;
+    private RequestParametersDto parametersDto;
 
     @Mock
     private ParametersRepository parametersRepository;
 
     @InjectMocks
-    private ParametersActualizarServiceImpl parametrosActualizar;
-
-    private RequestParametersDto parametersDto;
-    private ParametersEntity parametersEntity;
-
+    private ParametersCrearServiceImpl parametersCrearService;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
         parametersDto = new RequestParametersDto();
-        parametersDto.setCapa("capa1");
-        parametersDto.setEstado("estado");
+        parametersDto.setCapa("capa");
+        parametersDto.setEstado("activo");
         parametersDto.setValor("valor");
-        parametersEntity = new ParametersEntity();
-        parametersEntity.setDni(1);
-        parametersEntity.setCapa("capa1");
-        parametersEntity.setEstado("estado");
-        parametersEntity.setValor("valor");
 
+        parametersEntity = ParametroUtil.mapParametersEntity(parametersDto);
     }
 
     @Test
-    void testUpdateParameters() {
-
-        Mockito.when(parametersRepository.findByDni(parametersEntity.getDni())).thenReturn(parametersEntity);
+    void testParametroCrearServiceImpl() {
         Mockito.when(parametersRepository.save(parametersEntity)).thenReturn(parametersEntity);
 
         ApiResponseDto expected = ApiResponseDto.builder().data(parametersEntity)
-                .message(Constants.SUCESSFULL)
-                .status(HttpStatus.CREATED).build();
+                    .message(Constants.SUCESSFULL)
+                    .status(HttpStatus.CREATED).build();
+        ApiResponseDto resul = parametersCrearService.createParameters(parametersDto);
 
-        ApiResponseDto resul = parametrosActualizar.updateParameters(parametersEntity.getDni(), parametersDto);
         assertEquals(expected, resul);
-
-
-//        ApiResponseDto expected = ApiResponseDto.builder().data(null).message("Error actualizando en Base Datos").status(HttpStatus.CONFLICT).build();
     }
+
+
 }
